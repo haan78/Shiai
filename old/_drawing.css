@@ -1,0 +1,166 @@
+.dmain[data-model="6"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 9 span;
+}
+
+.dmain[data-model="9"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 12 span;
+}
+
+.dmain[data-model="12"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 9 span;
+}
+
+.dmain[data-model="15"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 10 span;
+}
+
+.dmain[data-model="18"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 12 span;
+}
+
+.dmain[data-model="21"] {
+    --gcol: min-content auto 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --grow: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    --gres: 15 span;
+}
+
+.dmain {
+    background-color: rgb(236, 236, 228);
+    color: rgb(86, 79, 150);
+    display: grid;
+    grid-template-columns: var(--gcol);
+    grid-template-rows: var(--grow);
+    overflow: hidden;    
+    height: 96vh;
+    width: 96vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.dmain > div {
+    display: flex;
+    align-items: center;
+    padding: .3em;
+}
+
+.dmain > .pool {
+    white-space: nowrap;
+    border: solid 2px black;
+    padding: 0;
+    cursor: pointer;
+    min-width: 20em;
+}
+
+.dmain > div.pool > span {
+    display: flex;
+    font-weight: bolder;
+    padding-right: .5em;
+    background-color: black;
+    color: white;
+    margin-top: auto;
+    margin-bottom: auto;
+    line-height: 100%;
+    align-items: center;
+    height: 100%;
+}
+
+.dmain > .pool > ul {
+    display:inline;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 2em;
+    list-style-type: upper-roman;
+    overflow: hidden;
+}
+
+.dmain > .pool > ul > li {
+    display: list-item;
+    float: left;
+    margin-right: 2em;
+}
+
+.dmain  > .jo  {
+    background-color: lightgray;    
+    writing-mode: vertical-rl;    
+    justify-content:center;
+    text-orientation: mixed;
+    grid-row-end: var(--gres);
+    margin-right: 1em;
+}
+
+.dmain > div.pc {
+    border: solid 2px black;
+    cursor: pointer;
+    justify-content: center;
+    font-size: larger;
+}
+
+.dmain > div.r >span:nth-child(1) {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dmain > div.r >span:nth-child(2) {
+    height: 100%;
+    width: 1em;
+    background-color: red;
+    border: solid 2px black;
+}
+
+.dmain > div.w >span:nth-child(1) {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dmain > div.w >span:nth-child(2) {
+    height: 100%;
+    width: 1em;
+    background-color: white;
+    border: solid 2px black;
+}
+
+.dmain > div.nl { /*no left*/
+    border-left: 0;
+}
+
+.dmain > div.bl { /*bottom line*/
+    justify-content: center;
+    align-items: flex-end;
+    border-bottom: solid 2px black;    
+}
+
+.dmain > .nl { /*no left*/
+    border-left: 0;
+}
+
+.dmain > .jr { /*justify right*/
+    justify-content: flex-end !important;
+    align-items: center !important;
+}
+
+.dmain > div.tl { /*title left*/
+    justify-content: flex-end;
+}
+
+.dmain > div.rl { /*right line*/
+    border-right: solid 2px black;
+    justify-content: flex-end;
+}
