@@ -5,7 +5,9 @@ const STORAGE_NAME_PLAYERS = "PLAYERS";
 const STORAGE_NAME_MATCHES = "MATCHES";
 function load(name,def) {
     var v = window.localStorage.getItem(name);
-    return v ? JSON.parse(v) : def;
+    var result = v ? JSON.parse(v) : def;
+    console.log([name,result]);
+    return result;
 }
 
 export const drawing = writable(load(STORAGE_NAME_DRAWING,[]));

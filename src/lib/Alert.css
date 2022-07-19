@@ -1,0 +1,93 @@
+
+
+
+.alert {
+
+    --alert-bg-good: darkgreen;
+    --alert-bg-bad: darkred;
+    --alert-bg-ugly: darkgoldenrod;
+    --alert-cl-good: lightgray;
+    --alert-cl-bad: lightgray;
+    --alert-cl-ugly: black;
+    --alert-shadow:drop-shadow(8px 8px 5px darkgray);
+
+    position: absolute;
+    width: max-content;
+    min-width: 20em;
+    display: block;
+    z-index: 999;
+    margin-bottom: 1.3em;
+    margin-left: .5em;
+    margin-right: .5em;
+    margin-top: .5em;
+}
+
+.alert.top-center {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.alert.top-left {
+    left: 0;
+    top: 0;
+}
+
+.alert.frame.top-right {
+    right: 0;
+    top: 0;
+}
+
+.alert.bottom-center {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+}
+
+.alert.bottom-left {
+    left: 0;
+    bottom: 0;
+}
+
+.alert.bottom-right {
+    right: 0;
+    bottom: 0;
+}
+
+.alert.center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.alert > .frame {
+    display: block;
+    max-width: 20em;
+    padding: .5em;
+    border-radius: 20px;
+    filter: var(--alert-shadow);
+    opacity: 0.95;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: .6em;
+}
+
+.alert > .frame.good {
+    background-color: var(--alert-bg-good);
+    color: var(--alert-cl-good);
+}
+
+.alert > .frame.bad {
+    background-color: var(--alert-bg-bad);
+    color: var(--alert-cl-bad);
+}
+
+.alert > .frame.ugly {
+    background-color: var(--alert-bg-ugly);
+    color: var(--alert-cl-ugly);
+}

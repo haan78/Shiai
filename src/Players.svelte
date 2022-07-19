@@ -2,9 +2,10 @@
     import { createEventDispatcher,onMount } from 'svelte';
     import { get } from 'svelte/store';
     import { playersStore,drawing } from './store';
-    import Dialog from './lib/Dialog.svelte';
+    import Alert from "./lib/Alert";
+    import "./lib/Alert.css";
     import "./dialogs.css";
-    
+    let container;
     const dispatch = createEventDispatcher();
     let clear = false;
     let list = [];
@@ -13,19 +14,22 @@
 
     function setList() {
         message = "";
+        console.log(list);
         var ind = list.findIndex(p=>{
             return !p;
         });
 
         if (ind>-1) {
             message = `Number ${ind+1} needs a name`;
+            Alert(container).bad(message);
             return;            
         }
 
         for(var i=0; i<list.length-1; i++) {
             for(var j=i+1; j<list.length; j++) {
                 if (list[i].name == list[j].name) {
-                    message = `${ind+1}. ${list[j].name} is defined previously`;
+                    message = `${j+1}. ${list[j].name} is defined previously`;
+                    Alert(container).bad(message);
                     return;
                 }
             }
@@ -53,11 +57,16 @@
         dispatch("close",null);
     }
 
-    function add() {
-        var arr = (new Array(playerCount)).fill("");  
+    function alerttest() {
+        Alert(container).pos("bottom-center").ugly("Selam fg kdfigş gşlk digş ldfkg dfgdfşlgk dsfigşldfkgidşfs gkglk sdfgşlkdfs igşlsdfkig şdlskgs işdflgkgşdfki").then(()=>{
+            console.log("kapandı");
+        });
+    }
+
+    function add() {        
         list.push({
             name:"",
-            players:arr
+            players:(new Array(playerCount)).fill("")
         });
         list = list;        
     }
@@ -90,9 +99,9 @@
         }
     });
 </script>
-<Dialog on:close={close}>
+<main bind:this={container}>
     <div class="playersdiv">
-        <h1>Players</h1>
+        <h1 on:click={alerttest}>Players</h1>
         <div class="head">
             <button on:click={add}>Add One</button>
             <button on:click={cleraList}>Clear</button>
@@ -122,7 +131,7 @@
         </div>
         
     </div>
-</Dialog>
+</main>
 <style>
     .playersdiv {
         text-align: center;
@@ -137,7 +146,7 @@
         display: flex;
         height: auto;
         max-height: 35em;
-        width: 40em;
+        width: 100%;
         overflow-y: scroll;
         flex-flow: row wrap;
         flex-direction: row;
@@ -163,6 +172,7 @@
 
     .playersdiv > .body > .cell > .title > button {
         background-color:brown;
+        cursor: pointer;
         color: bisque;
         width: 3em;
         margin-right: 0;

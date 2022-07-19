@@ -3,6 +3,10 @@
 	import PlayerSelect from "./PlayerSelect.svelte";
 	import PoolDialog from "./PoolDialog.svelte";
 	import Players from './Players.svelte';
+
+	import { get } from 'svelte/store';
+    import { playersStore } from './store';
+	import { onMount } from "svelte";
 	
 	import Board from './Board.svelte';
 
@@ -24,8 +28,13 @@
 		}
 	}
 
+	function playersclose(evt) {
+		screen = "draw";
+		console.log(evt);
+	}
+
 	function openplayers(evt) {
-		dialog = "players";
+		screen = "players";
 	}
 
 	let dialog = "";
@@ -36,6 +45,13 @@
 	function dialogclose() {
 		dialog = "";
 	}
+
+	onMount(()=>{
+		var pl = get(playersStore);
+		if (Array.isArray(pl) && pl.length == 0 ) {
+			screen = "players";
+		}
+	});
 </script>
 
 <main>
@@ -43,14 +59,14 @@
 	<PoolDialog	poolIndex={poolIndex} on:close={dialogclose} />
 	{:else if (dialog=="elim")}
 	<PlayerSelect path={path} on:close={dialogclose} />
-	{:else if (dialog=="players")}
-	<Players on:close={dialogclose} />
-	{/if}	
-	<button class="newbtn" on:click={openplayers}>Players</button>
+	{/if}
 	{#if (screen == "draw")}
-	<Draw on:click={cellclick} />	
+	<Draw on:click={cellclick} />
+	<button class="newbtn" on:click={openplayers}>Players</button>
 	{:else if (screen=="board")}
 	<Board path={path} />
+	{:else if (screen == "players")}
+		<Players on:close={playersclose} />
 	{/if}
 </main>
 
