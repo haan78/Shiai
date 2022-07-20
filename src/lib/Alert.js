@@ -1,39 +1,42 @@
+import "./Alert.css";
 export default (container) => {
     return {
-        container:container,
-        __alert:null,
-        __stettings:{
-            time:3000,
-            pos:"center",
-            id:"__alert_div"
+        container: container,
+        __alert: null,
+        __stettings: {
+            time: 3000,
+            pos: "center",
+            id: "__alert_div"
         },
-        __create(type,message,closefnc) {
-            this.__alert = this.container.querySelector("#"+this.__stettings.id);
+        __delete(frame, closefnc) {
+            if (frame && frame.parentElement) {
+                this.__alert.removeChild(frame);
+                if (this.__alert.childNodes == 0) {
+                    var pe = this.__alert.parentElement;
+                    pe.removeChild(this.__alert);
+                }
+                closefnc();
+            }
+        },
+        __create(type, message, closefnc) {
+            this.__alert = this.container.querySelector("#" + this.__stettings.id);
             if (!this.__alert) {
                 this.__alert = document.createElement("div");
                 this.__alert.id = this.__stettings.id;
-                this.__alert.classList.add("alert",this.__stettings.pos);
+                this.__alert.classList.add("alert", this.__stettings.pos);
                 this.container.appendChild(this.__alert);
             }
-            var frame = document.createElement("div");            
-            frame.classList.add("frame",type);
+            var frame = document.createElement("div");
+            frame.classList.add("frame", type);
             frame.innerHTML = message;
-            frame.addEventListener("click",() =>{
-                //var div = this.container.querySelector("#"+this.__stettings.id);
-                if (frame) {
-                    this.__alert.removeChild(frame);
-                    closefnc();
-                }                 
+            frame.addEventListener("click", () => {
+                this.__delete(frame, closefnc);
             });
             this.__alert.appendChild(frame);
-            if ( this.__stettings.time > 0 ) {
-                setTimeout(()=>{
-                    //var div = this.container.querySelector("#"+this.__stettings.id);
-                    if (frame) {
-                        this.__alert.removeChild(frame);
-                        closefnc();
-                    }                    
-                },this.__stettings.time);
+            if (this.__stettings.time > 0) {
+                setTimeout(() => {
+                    this.__delete(frame, closefnc);
+                }, this.__stettings.time);
             }
 
         },
@@ -42,29 +45,29 @@ export default (container) => {
             return this;
         },
         pos(position) {
-            this.__stettings.pos = ["top-center","top-left","top-right","bottom-center","bottom-left","bottom-right","center"].includes(position) ? position : "top-center";
+            this.__stettings.pos = ["top-center", "top-left", "top-right", "bottom-center", "bottom-left", "bottom-right", "center"].includes(position) ? position : "top-center";
             return this;
         },
         good(message) {
             let self = this;
-            return new Promise(function(resolve, reject) {
-                self.__create("good",message,()=>{
+            return new Promise(function (resolve, reject) {
+                self.__create("good", message, () => {
                     resolve(true);
                 });
             });
         },
         bad(message) {
             let self = this;
-            return new Promise(function(resolve, reject) {
-                self.__create("bad",message,()=>{
+            return new Promise(function (resolve, reject) {
+                self.__create("bad", message, () => {
                     resolve(true);
                 });
             });
         },
         ugly(message) {
             let self = this;
-            return new Promise(function(resolve, reject) {
-                self.__create("ugly",message,()=>{
+            return new Promise(function (resolve, reject) {
+                self.__create("ugly", message, () => {
                     resolve(true);
                 });
             });

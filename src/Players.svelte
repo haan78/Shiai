@@ -3,7 +3,8 @@
     import { get } from 'svelte/store';
     import { playersStore,drawing } from './store';
     import Alert from "./lib/Alert";
-    import "./lib/Alert.css";
+    import Confirm from "./lib/Confirm";
+
     import "./dialogs.css";
     let container;
     const dispatch = createEventDispatcher();
@@ -58,8 +59,13 @@
     }
 
     function alerttest() {
-        Alert(container).pos("bottom-center").ugly("Selam fg kdfigş gşlk digş ldfkg dfgdfşlgk dsfigşldfkgidşfs gkglk sdfgşlkdfs igşlsdfkig şdlskgs işdflgkgşdfki").then(()=>{
+        /*Alert(container).pos("bottom-center").ugly("Selam fg kdfigş gşlk digş ldfkg dfgdfşlgk dsfigşldfkgidşfs gkglk sdfgşlkdfs igşlsdfkig şdlskgs işdflgkgşdfki").then(()=>{
             console.log("kapandı");
+        });*/
+        Confirm(container).ask("Are you sure?","Hello").then(()=>{
+            console.log("Yes");
+        }).catch(()=>{
+            console.log("No");
         });
     }
 
