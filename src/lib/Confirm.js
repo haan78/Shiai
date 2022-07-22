@@ -5,8 +5,8 @@ export default (container) => {
         __div:null,
         __modalclick:false,
         __stettings: {
-            btnYes:"Yes",
-            btnNo:"No",
+            btnYes:"OK",
+            btnNo:"Cancel",
             id:"__confirm_div"
         },
         __delete() {
@@ -15,7 +15,7 @@ export default (container) => {
                 pe.removeChild(this.__div);
             }
         },
-        __create(message,title,yesfnc,nofnc) {
+        __create(message,title,yesfnc,nofnc,options) {
             this.__div = this.container.querySelector("#" + this.__stettings.id);
             if (!this.__div) {
                 this.__div = document.createElement("div");
@@ -29,34 +29,49 @@ export default (container) => {
             var header = document.createElement("div");
             var body = document.createElement("div");
             var footer = document.createElement("div");
+            
             var yes = document.createElement("button");
             var no = document.createElement("button");
 
-            yes.addEventListener("click",()=>{
-                this.__delete();
-                yesfnc();
-            });
+            if (Array.isArray(options)) {
+                var select = document.createElement("select");
+                for(var i=0; i<options.length; i++) {
+                    var op = new Option(options[i],i);
+                    select.appendChild(op);
+                }
+                yes.addEventListener("click",()=>{
+                    this.__delete();
+                    yesfnc(select.selectedIndex);
+                });
+                footer.appendChild(select);
+            } else {
+                yes.addEventListener("click",()=>{
+                    this.__delete();
+                    yesfnc();
+                });
+            }
+
+            
             no.addEventListener("click",()=>{
                 this.__delete();
                 nofnc();
             });
 
+            yes.classList.add("yes");
+            no.classList.add("no");
+            yes.innerHTML = this.__stettings.btnYes;
+            no.innerHTML = this.__stettings.btnNo;
+            footer.appendChild(yes);
+            footer.appendChild(no);
+
             modal.classList.add("modal");
             header.classList.add("header");
             body.classList.add("body");
             footer.classList.add("footer");
-            yes.classList.add("yes");
-            no.classList.add("no");
-
-
+            
 
             header.innerHTML = title || "";
             body.innerHTML = message;
-            yes.innerHTML = this.__stettings.btnYes;
-            no.innerHTML = this.__stettings.btnNo;
-
-            footer.appendChild(yes);
-            footer.appendChild(no);
             
             modal.appendChild(header);
             modal.appendChild(body);
@@ -73,13 +88,13 @@ export default (container) => {
                 this.__modalclick = false;
             };
         },
-        ask(message,title) {
+        ask(message,title,options) {
             return new Promise((resolve, reject)=>{
-                this.__create(message,title,()=>{
-                    resolve(true);
+                this.__create(message,title,(opind)=>{
+                    resolve(opind);
                 },()=>{
                     reject(false);
-                });
+                },options);
             });
         }
     };

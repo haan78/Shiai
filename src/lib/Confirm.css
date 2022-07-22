@@ -51,16 +51,19 @@
     
 }
 
-.confirm > .modal > .footer > button:first-child {
-    margin-right: 1em;
-}
 
 .confirm > .modal > .footer > button.yes {
     background-color: var(--bg-good);
     color: var(--cl-good);
+    margin-right: 1em;
 }
 
 .confirm > .modal > .footer > button.no {
     background-color: var(--bg-bad);
     color: var(--cl-bad);
+}
+
+.confirm > .modal > .footer > select {
+    margin-right: 1em;
+    max-width: 23em;
 }

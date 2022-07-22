@@ -27,7 +27,7 @@
 <div class="pool">
     <span on:click={()=>click("list")} title="Click to open player list" >P{number}</span>
     <ul on:click={()=>click("board")} title="Click to open pool matches">
-        {#each list as p }<li>{p}</li>{/each}
+        {#each list as p }<li>{p.name}</li>{/each}
     </ul>
 </div>
 <style>

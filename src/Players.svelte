@@ -1,14 +1,13 @@
 <script>
     import { createEventDispatcher,onMount } from 'svelte';
     import { get } from 'svelte/store';
-    import { playersStore,drawing } from './store';
+    import { playersStore,drawing,matches } from './store';
     import Alert from "./lib/Alert";
     import Confirm from "./lib/Confirm";
 
     import "./dialogs.css";
     let container;
-    const dispatch = createEventDispatcher();
-    let clear = false;
+    const dispatch = createEventDispatcher();    
     let list = [];
     let playerCount = 5;
     let message="";
@@ -26,47 +25,60 @@
             return;            
         }
 
-        for(var i=0; i<list.length-1; i++) {
-            for(var j=i+1; j<list.length; j++) {
-                if (list[i].name == list[j].name) {
-                    message = `${j+1}. ${list[j].name} is defined previously`;
-                    Alert(container).bad(message);
+        for(var i=0; i<list.length; i++) {
+            list[i].name = list[i].name.trim().toUpperCase();
+            if ( !list[i].name ) {
+                Alert(container).bad(`${i+1}th. ${ playerCount == 1 ? "Player" : "Team" } needs a name`);                
+                return;
+            }
+            if ( playerCount == 1 ) {
+                list[i].players = [list[i].name];
+                console.log(list[i]);
+            }
+            for(var j = 0; j<list[i].players.length; j++ ) {
+                list[i].players[j] = list[i].players[j].trim().toUpperCase();
+                if (!list[i].players[j]) {
+                    Alert(container).bad(`${ j+1 }th. Player of the ${i+1}th. Team  needs a name`);
                     return;
                 }
             }
+
+            for(var l = 0; l<i; l++) {
+                if ( list[l].name == list[i].name ) {
+                    Alert(container).bad(`${ i+1 }th. ${ playerCount == 1 ? "Player" : "Team" } name has been defined in ${l+1}th`);
+                    return;
+                } else {
+                    for(var m=0; m<list[l].players.length; m++) {
+                        var ind = list[i].players.indexOf(list[l].players[m]);
+                        if ( ind > -1 ) {
+                            Alert(container).bad(`${ind+1}th. player of ${ i+1 }th. Team name has been defined in ${l+1}th Team as number ${m+1}`);
+                            return;
+                        }
+                    }
+                }                    
+            }
         }
 
-        if (playerCount == 1) {
-            list = list.map(p=>{                
-                return {
-                    name:p.name,
-                    players:[p.name]
-                };
-            });
-        }
 
-        console.log("update");
-        playersStore.set(list);
-        if (clear) {
-            drawing.set([]);
-        }
-        close();
-        console.log(list);
+        Confirm(container).ask("What would you likt to do?","Save Changes",[            
+            "Keep current matches and drawings and just change team and/or player informations.",
+            "Clear all existence data and create new tournament by this player informations",
+            "Don't do anything!"
+        ]).then((ind)=>{
+            if ( ind == 0 ) {                
+                playersStore.set(list);
+                close();
+            } else if ( ind == 1 ) {
+                playersStore.set(list);
+                drawing.set([]);
+                matches.set([]);
+                close();
+            }
+        });
     }
-
+    
     function close() {
         dispatch("close",null);
-    }
-
-    function alerttest() {
-        /*Alert(container).pos("bottom-center").ugly("Selam fg kdfigş gşlk digş ldfkg dfgdfşlgk dsfigşldfkgidşfs gkglk sdfgşlkdfs igşlsdfkig şdlskgs işdflgkgşdfki").then(()=>{
-            console.log("kapandı");
-        });*/
-        Confirm(container).ask("Are you sure?","Hello").then(()=>{
-            console.log("Yes");
-        }).catch(()=>{
-            console.log("No");
-        });
     }
 
     function add() {        
@@ -107,7 +119,7 @@
 </script>
 <main bind:this={container}>
     <div class="playersdiv">
-        <h1 on:click={alerttest}>Players</h1>
+        <h1>Players</h1>
         <div class="head">
             <button on:click={add}>Add One</button>
             <button on:click={cleraList}>Clear</button>

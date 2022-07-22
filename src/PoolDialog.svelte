@@ -32,28 +32,44 @@
         dispatch("close",null);
     }
 
-    function getAvailables() {        
-        return players.filter(p0=>{
+    function getAvailables() {   
+        return players.reduce((pv,cv,ind)=>{
+            if (!data[0].find(pool=>{
+                console.log(pool);                
+                return Array.isArray(pool) && pool.find(pind=> {
+                    return players[pind].name == cv.name;
+                });
+            })) {
+                var ncv = Object.assign({},cv);
+                ncv["index"] = ind;
+                pv.push(ncv);
+            }
+            return pv;
+        },[]);  
+        /*return players.filter(p0=>{
             return !data[0].find(pool=>{
-                return Array.isArray(pool) && pool.find(p1=>p1==p0);
+                return Array.isArray(pool) && pool.find(p1=>p1.name==p0.name);
             });
-        });
+        });*/
     }
 
     onMount(()=>{
         availables = getAvailables();
+        console.log(availables);
     });
 
     function add(index) {
-        data[0][poolIndex].push(availables[index]);
+        data[0][poolIndex].push(availables[index].index);
         data = data;
         availables = getAvailables();
+        console.log(availables);
         drawing.set(data);
     }
     function remove(index) {        
         data[0][poolIndex].splice(index,1);
         data = data;
         availables = getAvailables();
+        console.log(availables);
         drawing.set(data);
     }
     function clean() {
@@ -76,13 +92,13 @@
             <tr>
                 <td>
                     <div>
-                        {#each availables as p,i }<button on:click={()=>add(i)}>{p}</button>{/each}            
+                        {#each availables as p,i }<button on:click={()=>add(i)}>{p.name}</button>{/each}            
                     </div>
                     
                 </td>
                 <td>
                     <div>
-                        {#each data[0][poolIndex] as p,i }<button on:click={()=>remove(i)}>{p}</button>{/each} 
+                        {#each data[0][poolIndex] as pind,i }<button on:click={()=>remove(i)}>{players[pind].name}</button>{/each} 
                     </div>                    
                 </td>
             </tr>

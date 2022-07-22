@@ -13,7 +13,7 @@
             var c = path[4];
             if ( v && v[l] && v[l][i] && typeof v[l][i][c] !== "undefined" ) {
                 var n = v[l][i][c];                
-                name = n ? n : '';
+                name = n ? n.name : '';
             } else {
                 name = '';
             }

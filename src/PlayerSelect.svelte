@@ -50,8 +50,8 @@
 
     function getTitle(p) {
         if (p[0]==0) {
-            return `${p[5]}th. Player of Pool ${(p[1]+1)} `;            
-        } else if (p[5]) {
+            return `${p[5]}th. Place of Pool ${(p[1]+1)} `;
+        } else if (p[5]) { //burda bi hata var 
             return `Winner of the match number ${p[5]}`;
         } else {
             return "";
@@ -89,8 +89,8 @@
         <div style="width: 100%">
             <h2>{title}</h2>
         {#if (list.length == 2)}
-        <div><button class="btn" on:click={()=>select(list[0])}><span>{list[0]}</span><span class="red">&nbsp;&nbsp;</span></button></div>
-        <div><button class="btn" on:click={()=>select(list[1])}><span>{list[1]}</span><span class="white">&nbsp;&nbsp;</span></button></div>
+        <div><button class="btn" on:click={()=>select(list[0])}><span>{list[0].name}</span><span class="red">&nbsp;&nbsp;</span></button></div>
+        <div><button class="btn" on:click={()=>select(list[1])}><span>{list[1].name}</span><span class="white">&nbsp;&nbsp;</span></button></div>
         {:else if (list.length > 0) }
             {#each list as p }
             <div><button class="btn" on:click={()=>select(p)}>{p}</button></div>
