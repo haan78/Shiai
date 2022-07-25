@@ -32,44 +32,41 @@
         dispatch("close",null);
     }
 
-    function getAvailables() {   
+    function getAvailables() {          
         return players.reduce((pv,cv,ind)=>{
             if (!data[0].find(pool=>{
                 console.log(pool);                
-                return Array.isArray(pool) && pool.find(pind=> {
+                return Array.isArray(pool) && typeof pool.find(pind=> {
                     return players[pind].name == cv.name;
-                });
+                }) !== "undefined";
             })) {
+                console.log(["PV",pv]);
+                console.log(["CV",cv]);
                 var ncv = Object.assign({},cv);
-                ncv["index"] = ind;
+                ncv["index"] = ind;                
                 pv.push(ncv);
             }
             return pv;
-        },[]);  
-        /*return players.filter(p0=>{
-            return !data[0].find(pool=>{
-                return Array.isArray(pool) && pool.find(p1=>p1.name==p0.name);
-            });
-        });*/
+        },[]);
     }
 
     onMount(()=>{
         availables = getAvailables();
-        console.log(availables);
+        //console.log(availables);
     });
 
     function add(index) {
         data[0][poolIndex].push(availables[index].index);
         data = data;
         availables = getAvailables();
-        console.log(availables);
+        //console.log(availables);
         drawing.set(data);
     }
     function remove(index) {        
         data[0][poolIndex].splice(index,1);
         data = data;
         availables = getAvailables();
-        console.log(availables);
+        //console.log(availables);
         drawing.set(data);
     }
     function clean() {

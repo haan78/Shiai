@@ -1,10 +1,12 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { drawing } from './store.js';
+    import { drawing,playersStore } from './store.js';
     const dispatch = createEventDispatcher();    
     export let number;
 
     let list = [];
+    let players = [];
+    playersStore.subscribe(v=>players=v);
     drawing.subscribe(v=>{
         if (v && Array.isArray(v[0]) && Array.isArray(v[0][number-1]) ) {
             list = v[0][number-1];
@@ -20,14 +22,11 @@
         dispatch('click',{ number,index,cell,target });
     }
 
-    function board() {
-
-    }
 </script>
 <div class="pool">
     <span on:click={()=>click("list")} title="Click to open player list" >P{number}</span>
     <ul on:click={()=>click("board")} title="Click to open pool matches">
-        {#each list as p }<li>{p.name}</li>{/each}
+        {#each list as pind }<li>{ players[pind].name }</li>{/each}
     </ul>
 </div>
 <style>
