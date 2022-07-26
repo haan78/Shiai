@@ -13,6 +13,16 @@
     let message="";
 
     function setList() {
+
+        function isNecessary(poolind,playerind) {
+            if ( (list[poolind].players.length == 4 &&  playerind == 3) || (list[poolind].players.length == 6 &&  playerind == 5) ) {
+                return false;
+            } else {
+                return true;
+            }
+            
+        }
+
         message = "";
         console.log(list);
         var ind = list.findIndex(p=>{
@@ -37,7 +47,7 @@
             }
             for(var j = 0; j<list[i].players.length; j++ ) {
                 list[i].players[j] = list[i].players[j].trim().toUpperCase();
-                if (!list[i].players[j]) {
+                if (!list[i].players[j] && isNecessary(i,j)) {
                     Alert(container).bad(`${ j+1 }th. Player of the ${i+1}th. Team  needs a name`);
                     return;
                 }
@@ -50,7 +60,7 @@
                 } else {
                     for(var m=0; m<list[l].players.length; m++) {
                         var ind = list[i].players.indexOf(list[l].players[m]);
-                        if ( ind > -1 ) {
+                        if ( ind > -1 && list[l].players[m] ) {
                             Alert(container).bad(`${ind+1}th. player of ${ i+1 }th. Team name has been defined in ${l+1}th Team as number ${m+1}`);
                             return;
                         }
@@ -109,7 +119,6 @@
     }
 
     onMount(()=>{
-        clear = false;
         list = JSON.parse(JSON.stringify(get(playersStore)));
         console.log(list);
         if (list.length > 0) {
@@ -126,7 +135,9 @@
             <select bind:value={playerCount} on:change={countcahnge}>
                 <option value={1}>Individual</option>
                 <option value={3}>Team (3 Players)</option>
+                <option value={4}>Team (3 Players and 1 substitute)</option>
                 <option value={5}>Team (5 Players)</option>
+                <option value={6}>Team (5 Players and 1 substitute)</option>
             </select>
         </div>
         <div class="body">
@@ -137,8 +148,16 @@
                         <input type="text" size="16" maxlength="16" bind:value={p.name} placeholder={playerCount == 1 ? 'Player Name' : 'Team Name' } />
                     </div>
                     {#if playerCount>1 }
-                        {#each p.players as pname }
-                            <div class="player"><input type="text" bind:value={pname} placeholder="Player Name" /></div>
+                        {#each p.players as pname,i }
+                            <div class="player">
+                                {#if (playerCount == 4 || playerCount == 6) && (i == playerCount - 1) }
+                                <span>Sub</span>
+                                {:else}
+                                <span>{i+1}th</span>
+                                {/if}
+                                
+                                <input type="text" bind:value={pname} placeholder="Player Name" />
+                            </div>
                         {/each}
                     {/if}
                 </div>                
@@ -204,13 +223,23 @@
 
 
     .playersdiv > .body > .cell > .player {
+        white-space: nowrap;
         height: min-content;
         width: 100%;
     }
+
+    .playersdiv > .body > .cell > .player > span {
+        text-align: right;
+        display: inline-block;
+        width: 8%;
+        margin-right: 2%;
+    }
+
     .playersdiv > .body > .cell > .player > input {
-        width: 100%;
+        width: 90%;
         margin-bottom: 0;
         margin-top: .5em;
+        display: inline-block;
     }
 
 </style>

@@ -1,10 +1,13 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { drawing } from './store.js';
+    import { drawing,playersStore } from './store.js';
     const dispatch = createEventDispatcher();
     export let path;
-    
+    let players = [];
     let name = "";
+
+    playersStore.subscribe(v=>players=v);
+
     drawing.subscribe(v=>{
         if (Array.isArray(path) && path.length > 4 ) {
             var l = path[2];
@@ -12,9 +15,8 @@
             var c = path[4];
             if ( v && v[l] && v[l][i] && typeof v[l][i][c] !== "undefined" ) {
                 var n = v[l][i][c];                
-                name = n ? n : '';
+                name = typeof n == "number" ? players[n].name : '';
             }
-            
         }
     });
     

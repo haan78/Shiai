@@ -1,12 +1,16 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import { drawing } from './store';
+    import { drawing,playersStore } from './store';
     import Dialog from './lib/Dialog.svelte';
     import "./dialogs.css";
     
     const dispatch = createEventDispatcher();
     export let path;
     let data;
+
+    let players = [];
+    playersStore.subscribe(v=>players=v);
+
     $: list = getList(data,path);
     $: title = getTitle(path);
 
@@ -68,7 +72,6 @@
                 arr = arr.filter(p0=>{
                     //console.log({ "level":level, group:data[level], "p0":p0, "p1":p1, "index":index, "ind":ind, "result":result });
                     var tl = path[2];
-                    var ti = path[2];
                     if (data[tl]) {
                         for(var i=0; i<data[tl].length; i++) {
                             if (Array.isArray(data[tl][i]) && data[tl][i].includes(p0)) {
@@ -76,7 +79,7 @@
                             }
                         }
                     }
-                    return true;                    
+                    return true;
                 });
                 //console.log({"arr":arr});
             }
@@ -89,11 +92,11 @@
         <div style="width: 100%">
             <h2>{title}</h2>
         {#if (list.length == 2)}
-        <div><button class="btn" on:click={()=>select(list[0])}><span>{list[0].name}</span><span class="red">&nbsp;&nbsp;</span></button></div>
-        <div><button class="btn" on:click={()=>select(list[1])}><span>{list[1].name}</span><span class="white">&nbsp;&nbsp;</span></button></div>
+        <div><button class="btn" on:click={()=>select(list[0])}><span>{players[list[0]].name}</span><span class="red">&nbsp;&nbsp;</span></button></div>
+        <div><button class="btn" on:click={()=>select(list[1])}><span>{players[list[1]].name}</span><span class="white">&nbsp;&nbsp;</span></button></div>
         {:else if (list.length > 0) }
             {#each list as p }
-            <div><button class="btn" on:click={()=>select(p)}>{p}</button></div>
+            <div><button class="btn" on:click={()=>select(p)}>{players[p].name}</button></div>
             {/each}
         {:else}
             <h2>There is no option</h2>
