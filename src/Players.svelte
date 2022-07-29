@@ -4,6 +4,7 @@
     import { playersStore,drawing,matches } from './store';
     import Alert from "./lib/Alert";
     import Confirm from "./lib/Confirm";
+    import Number from "./lib/Number.svelte";
 
     import "./dialogs.css";
     let container;
@@ -11,6 +12,8 @@
     let list = [];
     let playerCount = 5;
     let message="";
+    let tournomentCount = 12;
+    let system = 2;
 
     function setList() {
 
@@ -111,11 +114,21 @@
 
     function cleraList() {
         list = [];
+        tournomentCount = 12;
+        playerCount = 6;
     }
 
     function remove(ind) {
-        list.splice(ind,1);
-        list = list;
+        Confirm(container).ask(`Are you sure to remove ${ind+1}th ${ (playerCount==1 ? "player" : "team") }`).then(()=>{
+            list.splice(ind,1);
+            list = list;
+        });        
+    }
+
+    function create() {
+        for(var i=0; i<tournomentCount; i++) {
+            add();
+        }
     }
 
     onMount(()=>{
@@ -127,11 +140,14 @@
     });
 </script>
 <main bind:this={container}>
-    <div class="playersdiv">
-        <h1>Players</h1>
-        <div class="head">
-            <button on:click={add}>Add One</button>
-            <button on:click={cleraList}>Clear</button>
+    {#if (list.length == 0)}
+    <div class="formdiv">
+        <fieldset>
+            <legend>Number of {playerCount==1 ? 'Competitor' : 'Team'}</legend>
+            <Number min={5} max={256} bind:value={tournomentCount} />
+        </fieldset>
+        <fieldset>
+            <legend>Turnoment Type</legend>
             <select bind:value={playerCount} on:change={countcahnge}>
                 <option value={1}>Individual</option>
                 <option value={3}>Team (3 Players)</option>
@@ -139,6 +155,26 @@
                 <option value={5}>Team (5 Players)</option>
                 <option value={6}>Team (5 Players and 1 substitute)</option>
             </select>
+        </fieldset>
+        <fieldset>
+            <legend>System</legend>
+            <select bind:value={system}>                
+                <option value={2}>Two candidates from each pool advance to the next round</option>
+                <option value={1}>Only one candidate from each pool advance to the next round</option>
+                <option value={0}>Elimination</option>
+            </select>
+        </fieldset>
+        <button on:click={create} >Create New</button>
+    </div>
+    {/if}
+    <div class="playersdiv">
+        <h1>Players</h1>
+        <div class="head">            
+            {#if (list.length > 0) }
+            <button on:click={cleraList}>Clear</button>
+            <button on:click={add}>Add</button>
+            {/if}
+            
         </div>
         <div class="body">
             {#each list as p,i }
@@ -162,6 +198,7 @@
                     {/if}
                 </div>                
             {/each}
+            
         </div>
         <div class="foot" >
             <button class="okbtn" on:click={setList}>OK</button>
