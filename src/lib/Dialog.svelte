@@ -2,12 +2,18 @@
     import { createEventDispatcher,onMount } from 'svelte';
     
     const dispatch = createEventDispatcher();
+
+    export let visible = false;
+    $:{
+        console.log(["Prop Visibel",visible]);
+    }
     
     function show() {
         dispatch('show',null);
     }
 
     function close() {
+        visible = false;
         dispatch('close',null);
     }
 
@@ -16,11 +22,13 @@
     });
 </script>
 <main>
+    {#if (visible)}
     <div id="background"  on:click={()=>close()}></div>
     <div id="modal">
         <span on:click={()=>close(true)}>&#x2715</span>
         <slot></slot>
     </div>
+    {/if}
 </main>
 <style>
     #background {

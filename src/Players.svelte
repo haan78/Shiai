@@ -5,16 +5,19 @@
     import Alert from "./lib/Alert";
     import Confirm from "./lib/Confirm";
     import Number from "./lib/Number.svelte";
+    import Dialog from "./lib/Dialog.svelte";
 
     import "./dialogs.css";
     let container;
     const dispatch = createEventDispatcher();    
     let list = [];
+    let clearData = false;
     let playerCount = 5;
     let message="";
     let tournomentCount = 12;
     let system = 2;
 
+    let DialgVisible = false;
     function setList() {
 
         function isNecessary(poolind,playerind) {
@@ -73,20 +76,13 @@
         }
 
 
-        Confirm(container).ask("What would you likt to do?","Save Changes",[            
-            "Keep current matches and drawings and just change team and/or player informations.",
-            "Clear all existence data and create new tournament by this player informations",
-            "Don't do anything!"
-        ]).then((ind)=>{
-            if ( ind == 0 ) {                
-                playersStore.set(list);
-                close();
-            } else if ( ind == 1 ) {
-                playersStore.set(list);
-                drawing.set([]);
+        Confirm(container).ask("Are you sure to save?").then(()=>{
+            if (clearData) {
                 matches.set([]);
-                close();
+                drawing.set([]);
             }
+            playersStore.set(list);
+            close();
         });
     }
     
@@ -129,6 +125,12 @@
         for(var i=0; i<tournomentCount; i++) {
             add();
         }
+        DialgVisible = false;
+        clearData = true;
+    }
+
+    function newList() {
+        DialgVisible = true;
     }
 
     onMount(()=>{
@@ -140,8 +142,7 @@
     });
 </script>
 <main bind:this={container}>
-    {#if (list.length == 0)}
-    <div class="formdiv">
+    <Dialog bind:visible={DialgVisible} >
         <fieldset>
             <legend>Number of {playerCount==1 ? 'Competitor' : 'Team'}</legend>
             <Number min={5} max={256} bind:value={tournomentCount} />
@@ -159,12 +160,15 @@
         <fieldset>
             <legend>System</legend>
             <select bind:value={system}>                
-                <option value={2}>Two candidates from each pool advance to the next round</option>
-                <option value={1}>Only one candidate from each pool advance to the next round</option>
+                <option value={2}>Two candidates from each pool advance to the next tour</option>
+                <option value={1}>Only one candidate from each pool advance to the next tour</option>
                 <option value={0}>Elimination</option>
             </select>
         </fieldset>
-        <button on:click={create} >Create New</button>
+        <button on:click={create}>Create New</button>
+    </Dialog>
+    {#if (list.length == 0)}
+    <div class="formdiv">
     </div>
     {/if}
     <div class="playersdiv">
@@ -201,7 +205,11 @@
             
         </div>
         <div class="foot" >
-            <button class="okbtn" on:click={setList}>OK</button>
+            {#if (list.length > 0)}
+            <button class="okbtn" on:click={setList}>SAVE</button>
+            {:else}
+            <button class="okbtn" on:click={newList}>NEW</button>
+            {/if}
         </div>
         
     </div>
